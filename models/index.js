@@ -1,43 +1,36 @@
-// import all models
-const Post = require('./Post');
-const User = require('./User');
-const Vote = require('./Vote');
+// import models
+const Product = require('./Product');
+const Category = require('./Category');
+const Tag = require('./Tag');
+const ProductTag = require('./ProductTag');
 
-// create associations
-User.hasMany(Post, {
-  foreignKey: 'user_id'
+// Products belongsTo Category
+Product.belongsTo(Category, {
+  foreignKey: 'category_id',
 });
 
-Post.belongsTo(User, {
-  foreignKey: 'user_id'
+// Categories have many Products
+Category.hasMany(Product, {
+  foreignKey: 'category_id',
 });
 
-User.belongsToMany(Post, {
-  through: Vote,
-  as: 'voted_posts',
-  foreignKey: 'user_id'
+// Products belongToMany Tags (through ProductTag)
+Product.belongsToMany(Tag, {
+  through: ProductTag,
+  // as: 'product_tags',
+  foreignKey: 'product_id',
 });
 
-Post.belongsToMany(User, {
-  through: Vote,
-  as: 'voted_posts',
-  foreignKey: 'post_id'
+// Tags belongToMany Products (through ProductTag)
+Tag.belongsToMany(Product, {
+  through: ProductTag,
+  // as: 'product_tags',
+  foreignKey: 'tag_id',
 });
 
-Vote.belongsTo(User, {
-  foreignKey: 'user_id'
-});
-
-Vote.belongsTo(Post, {
-  foreignKey: 'post_id'
-});
-
-User.hasMany(Vote, {
-  foreignKey: 'user_id'
-});
-
-Post.hasMany(Vote, {
-  foreignKey: 'post_id'
-});
-
-module.exports = { User, Post, Vote };
+module.exports = {
+  Product,
+  Category,
+  Tag,
+  ProductTag,
+};
